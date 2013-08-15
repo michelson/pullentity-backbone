@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Pullentity::Backbone::VERSION
   spec.authors       = ["miguel michelson"]
   spec.email         = ["miguelmichelson@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.description   = %q{Pullentity client side powered by backbone & handlebars}
+  spec.summary       = %q{Pullentity client side powered by backbone & handlebars}
   spec.homepage      = ""
   spec.license       = "MIT"
 
