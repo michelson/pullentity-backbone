@@ -1,6 +1,4 @@
 
-#= require "bootstrap.min"
-
 #= require "handlebars"
 #= require "backbone/underscore"
 #= require "backbone/backbone"
