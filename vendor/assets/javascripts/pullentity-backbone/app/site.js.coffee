@@ -5,14 +5,16 @@
 #= require_tree ./views
 #= require_tree ./routers
 
-unless window.console
-  console =
+if _.isUndefined( window.console)
+  window.console =
     log: ->
     alert: ->
     info: ->
 
-if _.isUndefined window.pullentity_domain
-  alert("Please configure the domain name in pullentity.yml file or run pullentity auth login")
+
+console.log window.pullentity_domain
+if _.isUndefined( window.pullentity_domain) or window.pullentity_domain == "http://"
+  alert("Please configure the domain name in pullentity.yml file \n Or run > pullentity setup your@email.com. in console")
   false
 
 window.Pullentity =
