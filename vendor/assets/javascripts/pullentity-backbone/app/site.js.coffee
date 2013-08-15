@@ -12,7 +12,7 @@ if _.isUndefined( window.console)
     info: ->
 
 
-console.log window.pullentity_domain
+#console.log window.pullentity_domain
 if _.isUndefined( window.pullentity_domain) or window.pullentity_domain == "http://"
   alert("Please configure the domain name in pullentity.yml file \n Or run > pullentity setup your@email.com. in console")
   false
