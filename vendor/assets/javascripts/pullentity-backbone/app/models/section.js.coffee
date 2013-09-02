@@ -7,7 +7,7 @@ class Pullentity.Collections.Sections extends Backbone.Collection
 
   url : ()->
     if @id
-      "#{Pullentity.Domain}.#{Pullentity.host}/api/v1/site/sections/#{@id}"
+      "#{Pullentity.Domain}/api/v1/site/sections/#{@id}"
     else
-      "#{Pullentity.Domain}.#{Pullentity.host}/api/v1/site/sections"
+      "#{Pullentity.Domain}/api/v1/site/sections"
 
