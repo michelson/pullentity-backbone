@@ -26,6 +26,7 @@ window.Pullentity =
   Views: {
     Commons: {}
   }
+  App: {}
 
   Helpers:
     BootstrapHelpers: {}

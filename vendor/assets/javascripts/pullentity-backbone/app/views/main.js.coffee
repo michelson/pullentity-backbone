@@ -13,6 +13,9 @@ class Pullentity.Views.Commons.Main extends Backbone.View
 
   initModels: ()=>
     #console.log("init models")
+
+    @theme_templates = $(".pullentity-themes")
+
     @sections = new Pullentity.Collections.Sections(@site.get('sections'))
     @projects = new Pullentity.Collections.Projects(@site.get('projects'))
     #debugger
@@ -32,6 +35,7 @@ class Pullentity.Views.Commons.Main extends Backbone.View
     document.title = "#{@site.get("name")} pullentity site"
 
   initRouter: ()=>
+
     @app_router = new Pullentity.Routers.main
 
     @app_router.on 'route:defaultRoute', (actions)=>
@@ -45,7 +49,12 @@ class Pullentity.Views.Commons.Main extends Backbone.View
 
     @app_router.on 'route:getSection', (id)=>
       #console.log("get section #{id}")
+      #console.log @theme_templates
       @find_in_section(id)
+
+    @app_router.on 'route:getBlog', (id)=>
+      #console.log("get section #{id}")
+      @get_blog(id)
 
     Backbone.history.start(pushState: true)
 
@@ -54,7 +63,6 @@ class Pullentity.Views.Commons.Main extends Backbone.View
     source   = $("#layout").html()
     @theme_templates = $(".pullentity-themes")
     @layout = Handlebars.compile(source)
-    #console.log(@site.attributes)
     $("body").html(@layout(@site.attributes))
     @initRouter()
 
@@ -100,6 +108,9 @@ class Pullentity.Views.Commons.Main extends Backbone.View
     @render_handlebars()
     $("#content").html(@current_template(@current_project.attributes))
 
+  get_blog: ()=>
+    console.log("blog!!")
+
   find_theme_for_project: ()=>
     @current_theme_obj = _.find @theme_templates, (num)=>
       if $(num).attr("id") == @current_project.get("theme_template").name
@@ -125,7 +136,8 @@ class Pullentity.Views.Commons.Main extends Backbone.View
 
   render_handlebars: ()=>
     try
-      @current_template = Handlebars.compile($(@current_theme_obj).html())
+      #console.log "(try to render) #{@current_theme_obj.text} "
+      @current_template = Handlebars.compile(@current_theme_obj.text)
     catch e
       #console.error "error while creating Handlebars script out of template for [", $(@current_theme_obj), e
       throw e
@@ -152,4 +164,4 @@ class Pullentity.Views.Commons.Main extends Backbone.View
 
         return false
 
-layout = new Pullentity.Views.Commons.Main
+Pullentity.App = new Pullentity.Views.Commons.Main
