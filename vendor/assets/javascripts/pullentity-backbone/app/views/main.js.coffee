@@ -7,9 +7,6 @@ class Pullentity.Views.Commons.Main extends Backbone.View
   initialize: ->
     #console.info "pullentity LOADED!!!"
     @site = new Pullentity.Models.Site
-    -#@site.on("change", @initModels )
-    -#@listenTo(@site, "change", @initModels)
-
     @site.fetch
       success: =>
         @initModels()
