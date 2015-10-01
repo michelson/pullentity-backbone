@@ -5,13 +5,16 @@ class Pullentity.Views.Commons.Main extends Backbone.View
     "click": "hideSuggests"
 
   initialize: ->
-
     #console.info "pullentity LOADED!!!"
-    @site = new Pullentity.Models.Site(id: "michelsongs")
-    @site.on("change", @initModels )
-    @site.fetch()
+    @site = new Pullentity.Models.Site
+    -#@site.on("change", @initModels )
+    -#@listenTo(@site, "change", @initModels)
 
-  initModels: ()=>
+    @site.fetch
+      success: =>
+        @initModels()
+
+  initModels: ->
     #console.log("init models")
     @sections = new Pullentity.Collections.Sections(@site.get('sections'))
     @projects = new Pullentity.Collections.Projects(@site.get('projects'))
@@ -27,11 +30,11 @@ class Pullentity.Views.Commons.Main extends Backbone.View
 
     # quizas cargar router acá
 
-  setTitle: ()=>
+  setTitle: ()->
     #console.log @site.get("name")
     document.title = "#{@site.get("name")} pullentity site"
 
-  initRouter: ()=>
+  initRouter: ()->
     @app_router = new Pullentity.Routers.main
 
     @app_router.on 'route:defaultRoute', (actions)=>
@@ -49,7 +52,7 @@ class Pullentity.Views.Commons.Main extends Backbone.View
 
     Backbone.history.start(pushState: true)
 
-  render: ()=>
+  render: ()->
     #console.info("should render layout")
     source   = $("#layout").html()
     @theme_templates = $(".pullentity-themes")
@@ -58,31 +61,32 @@ class Pullentity.Views.Commons.Main extends Backbone.View
     $("body").html(@layout(@site.attributes))
     @initRouter()
 
-  render_home_project: ()=>
+  render_home_project: ()->
     @current_project = @projects.findWhere({home: true })
     @find_theme_for_project()
     @render_project()
 
-  find_project_by_id: (id)=>
+  find_project_by_id: (id)->
     @current_project = @projects.findWhere({id: parseInt(id) })
     @find_theme_for_project()
     @render_project()
 
-  find_in_section: (id)=>
+  find_in_section: (id)->
     @current_section = @sections.findWhere({ id: parseInt(id) })
     @render_project_or_list(id)
 
-  render_project_or_list: (id)=>
+  render_project_or_list: (id)->
     switch @current_section.get("list_or_project")
       when "project" then @render_project_theme()
       when "list"    then @render_list()
 
-  render_project_theme: ()=>
+  render_project_theme: ()->
     @current_project = @projects.findWhere(section_id: @current_section.id )
+    
     @find_theme_for_project()
     @render_project()
 
-  render_list: ()=>
+  render_list: ()->
 
     #si tiene theme para la lista
     if @theme_list = @current_section.get("theme_template")
@@ -96,17 +100,19 @@ class Pullentity.Views.Commons.Main extends Backbone.View
     @render_handlebars()
     $("#content").html(@current_template({section: @current_section.attributes, projects: @list_projects }))
 
-  render_project: ()=>
+  render_project: ()->
     @render_handlebars()
     $("#content").html(@current_template(@current_project.attributes))
+    
+    @.trigger('project_rendered');
 
-  find_theme_for_project: ()=>
+  find_theme_for_project: ()->
     @current_theme_obj = _.find @theme_templates, (num)=>
       if $(num).attr("id") == @current_project.get("theme_template").name
         num
     console.error "theme \"#{@current_project.get("theme_template").name}\" does not exist" unless @current_theme_obj
 
-  find_theme_for_list: ()=>
+  find_theme_for_list: ()->
     #console.log("list with theme!")
     name = @current_section.get("theme_template").name
     theme = _.find @theme_templates, (num)=>
@@ -114,23 +120,23 @@ class Pullentity.Views.Commons.Main extends Backbone.View
         num
     theme ? theme : @render_with_error(name)
 
-  find_projects_for_list: (section)=>
+  find_projects_for_list: (section)->
     @list_projects = _.filter @projects.toJSON(), (num)=>
       if num.section.public_url == section.get("public_url")
         num
 
-  render_with_error: (name)=>
+  render_with_error: (name)->
     $("#content").html("<pre>Couldn´t find template #{name} in /source/views/themes</pre>")
     console.warn "Couldn´t find projects in #{name} yet"
 
-  render_handlebars: ()=>
+  render_handlebars: ()->
     try
       @current_template = Handlebars.compile($(@current_theme_obj).html())
     catch e
       #console.error "error while creating Handlebars script out of template for [", $(@current_theme_obj), e
       throw e
 
-  setupLinks: ()=>
+  setupLinks: ()->
     # Globally capture clicks. If they are internal and not in the pass
     # through list, route them through Backbone's navigate method.
     $(document).on "click", "a[href^='/']", (event) =>
@@ -152,4 +158,4 @@ class Pullentity.Views.Commons.Main extends Backbone.View
 
         return false
 
-layout = new Pullentity.Views.Commons.Main
+#window.layout = new Pullentity.Views.Commons.Main
