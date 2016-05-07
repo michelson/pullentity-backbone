@@ -55,7 +55,7 @@ class Pullentity.Views.Commons.Main extends Backbone.View
     @theme_templates = $(".pullentity-themes")
     @layout = Handlebars.compile(source)
     #console.log(@site.attributes)
-    $("body").html(@layout(@site.attributes))
+    $(@el).html(@layout(@site.attributes))
     @initRouter()
 
   render_home_project: ()->
